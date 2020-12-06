@@ -1,5 +1,4 @@
-package org.example.Servlet;
-
+package org.example.servlet;
 
 import org.example.dao.ArticleDAO;
 import org.example.exception.AppException;
@@ -13,20 +12,19 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @WebServlet("/articleList")
-public class ArticleListServlet extends AbstractBaseServlet {
+public class ArticleListServlet extends AbstractBase{
     @Override
-    protected Object process(HttpServletRequest req, HttpServletResponse resp)throws Exception{
-        //获取session 若没有返回null
+    protected Object process(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         HttpSession session = req.getSession(false);
-        boolean notLogin = true;
+        //boolean notlogin = false;
         if(session == null)
             throw new AppException("ART002","用户未登录，不允许访问");
-        //获取登录时创建的session保存的用户信息
-        User user = (User)session.getAttribute("user");
+        //获取登陆时创建的session保存用户信息
+        User user = (User) session.getAttribute("user");
         if(user == null)
-            throw new AppException("ART003","会话异常，请重新登陆");
-        //用户已登录 并保存了用户信息
+            throw new AppException("ART003","会话异常，请重新登录");
+        //用户已登陆，并且保存了用户信息
         List<Article> articles = ArticleDAO.queryByUserId(user.getId());
-        return null;
+        return articles;
     }
 }
